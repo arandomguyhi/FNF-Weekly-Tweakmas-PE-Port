@@ -9,10 +9,10 @@ import states.LoadingState;
 createGlobalCallback('loadWeek', function(?songList:Array<String>, ?difficultyInt:Int)
 {
 	if (songList == null || songList.length < 1)
-		songList = [PlayState.SONG.song];
+	    songList = [PlayState.SONG.song];
 		
 	if (difficultyInt == null || difficultyInt == -1)
-		difficultyInt = PlayState.storyDifficulty;
+	    difficultyInt = PlayState.storyDifficulty;
 		
 	game.persistentUpdate = false;
 	
@@ -21,20 +21,19 @@ createGlobalCallback('loadWeek', function(?songList:Array<String>, ?difficultyIn
 	
 	if (game.vocals != null)
 	{
-		game.vocals.pause();
-		game.vocals.volume = 0;
+	    game.vocals.pause();
+	    game.vocals.volume = 0;
 	}
 	
 	FlxG.camera.followLerp = 0;
 
 	PlayState.storyPlaylist = songList;
-	
 	PlayState.isStoryMode = true;
 	
 	var difficultyString:String = Difficulty.getFilePath(difficultyInt);
 	
 	if (difficultyString == null)
-		difficultyString = '';
+	    difficultyString = '';
 		
 	PlayState.storyDifficulty = difficultyInt;
 	
@@ -42,6 +41,8 @@ createGlobalCallback('loadWeek', function(?songList:Array<String>, ?difficultyIn
 	
 	PlayState.campaignScore = 0;
 	PlayState.campaignMisses = 0;
-	
-	LoadingState.loadAndSwitchState(new PlayState(), true);
+
+	new FlxTimer().start(0.75, function() {
+	    LoadingState.loadAndSwitchState(new PlayState(), true);
+	});
 });
