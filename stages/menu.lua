@@ -197,15 +197,23 @@ function onCreate()
 	    addInstance('icon'..i)
     end
 
+    makeLuaText('scoreText', '', 0, screenWidth * 0.7, 5)
+    setTextSize('scoreText', 32)
+    setTextAlignment('scoreText', 'RIGHT')
+    setObjectCamera('scoreText', 'other')
+
+    makeLuaSprite('scoreBG', nil, getProperty('scoreText.x') - 6, 0)
+    makeGraphic('scoreBG', 1, 66, '000000')
+    setProperty('scoreBG.alpha', 0.6)
+    setObjectCamera('scoreBG', 'other')
+    addLuaSprite('scoreBG')
+
+    addLuaText('scoreText')
+
     changeSelection()
 end
 
 function onCreatePost()
-    --[[for _, i in pairs({'camGame', 'camHUD', 'camOther'}) do
-	setProperty(i..'.width', getProperty(i..'.width') - 10)
-	setProperty(i..'.x', getProperty(i..'.x') + 20)
-	setProperty(i..'.zoom', getProperty(i..'.zoom') + 0.015)
-    end]]
     setProperty('camGame.visible', false) setProperty('camHUD.visible', false)
 end
 
@@ -276,7 +284,6 @@ end
 
 function changeWeek(change) if change == nil then change = 0 end
     curWeek = curWeek + change
-    debugPrint(curWeek)
 
     if curWeek > #loadedWeeks then
 	    curWeek = 1
@@ -318,6 +325,16 @@ function changeSelection(change, playSoundie)
             setProperty('songText'.._..'.alpha', 1)
         end
     end
+
+    setTextString('scoreText', callMethodFromClass('backend.Highscore', 'getScore', {grpSongs[curSelected+1], 0}))
+    positionHighscore()
+end
+
+function positionHighscore()
+    setProperty('scoreText.x', screenWidth - getProperty('scoreText.width') - 6*4)
+
+    setProperty('scoreBG.scale.x', screenWidth - getProperty('scoreText.x') + 6*4)
+    setProperty('scoreBG.x', screenWidth - (getProperty('scoreBG.scale.x') / 2))
 end
 
 function mouseOverlaps(obj, camera)
