@@ -46,8 +46,13 @@ end
 
 function onEndSong()
     if isStoryMode then
+	setPropertyFromClass('states.addons.transition.FlxTransitionableState', 'skipNextTransIn', false)
+	setPropertyFromClass('states.addons.transition.FlxTransitionableState', 'skipNextTransOut', false)
+
 	if getPropertyFromClass('states.PlayState', 'storyPlaylist.length') <= 1 then
 	    callMethodFromClass('backend.Highscore', 'saveScore', {songName, score, difficulty, rating})
+
+	    setDataFromSave('mainMenu', 'wasStoryMode', true)
 	    loadSong('Main Menu')
 
 	    return Function_Stop

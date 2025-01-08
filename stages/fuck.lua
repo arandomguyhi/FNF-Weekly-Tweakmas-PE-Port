@@ -94,6 +94,7 @@ function goodNoteHit(id, noteData, noteType, isSustainNote)
 	playAnim('anais', getProperty('singAnimations')[noteData+1], true)
     else anaisSinging = false
     end
+    setVar('playerSing', noteType == 'Anais Note' and true or false)
 end
 
 function onBeatHit()

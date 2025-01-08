@@ -21,7 +21,7 @@
 	"startUnlocked": true,
 	"difficulties": "Normal",
 
-	"hideStoryMode": true,
+	"hideStoryMode": false,
 	"hideFreeplay": false,
 	"weeklogo": "SquadUp"
 }
