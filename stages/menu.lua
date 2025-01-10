@@ -39,7 +39,7 @@ local iconArray = {}
 local curSelected = 0
 
 local isMMenu = true
-local isFreeplay = true
+local isFreeplay = false
 
 -- saving the assets in tables to be easier to return them
 local titleAssets = {} -- not sure if i'm doing title state, but i'll let it here
@@ -47,8 +47,8 @@ local mainMenuAssets = {}
 local freeplayAssets = {}
 
 initSaveData('mainMenu')
-setDataFromSave('mainMenu', 'wasStoryMode', false)
-setDataFromSave('mainMenu', 'wasFreeplay', true)
+setDataFromSave('mainMenu', 'wasStoryMode', true)
+setDataFromSave('mainMenu', 'wasFreeplay', false)
 
 local wasStoryMode = getDataFromSave('mainMenu', 'wasStoryMode')
 
@@ -80,7 +80,6 @@ function onCreate()
     addAnimationByPrefix('norbert', 'intro', 'intro', 24, false)
     addAnimationByPrefix('norbert', 'idle', 'idle', 24, false)
     addAnimationByPrefix('norbert', 'start', 'start', 24, false)
-    setProperty('norbert.visible', false)
     setObjectCamera('norbert', 'other')
     addLuaSprite('norbert', true)
     table.insert(mainMenuAssets, 'norbert')
@@ -150,12 +149,14 @@ function onCreate()
     setProperty(optionGrp[6]..'.x', 1046)
     setProperty(optionGrp[6]..'.y', 491)
 
-    changeWeek()
 
     for _, i in pairs(mainMenuAssets) do
-	    if wasStoryMode then
-	        setProperty(i..'.visible', true)
-	        canClick = true
+	    if getDataFromSave('mainMenu', 'wasStoryMode') then
+            setProperty(i..'.visible', true)
+            setProperty('norbert.visible', false)
+
+            changeWeek()
+            canClick = true
 	    else
 	        cancelTimer('norbertIntro')
 	        setProperty(i..'.visible', false)
@@ -195,6 +196,9 @@ function onCreate()
 	    runHaxeCode("getVar('icon"..i.."').sprTracker = getVar('songText"..i.."');")
 	    setObjectCamera('icon'..i, 'other')
 	    addInstance('icon'..i)
+
+        table.insert(freeplayAssets, 'songText'..i)
+        table.insert(freeplayAssets, 'icon'..i)
     end
 
     makeLuaText('scoreText', '', 0, screenWidth * 0.7, 5)
@@ -202,12 +206,14 @@ function onCreate()
     setTextFont('scoreText', 'vcr.ttf')
     setProperty('scoreText.borderSize', 0)
     setObjectCamera('scoreText', 'other')
+    table.insert(freeplayAssets, 'scoreText')
 
     makeLuaSprite('scoreBG', nil, getProperty('scoreText.x') - 6, 0)
     makeGraphic('scoreBG', 1, 66, '000000')
     setProperty('scoreBG.alpha', 0.6)
     setObjectCamera('scoreBG', 'other')
     addLuaSprite('scoreBG')
+    table.insert(freeplayAssets, 'scoreBG')
 
     makeLuaText('diffText', '< NORMAL >', 0, getProperty('scoreText.x'), getProperty('scoreText.y') + 36)
     setTextSize('diffText', 24)
@@ -215,10 +221,18 @@ function onCreate()
     setProperty('diffText.borderSize', 0)
     setObjectCamera('diffText', 'other')
     addLuaText('diffText')
+    table.insert(freeplayAssets, 'diffText')
 
     addLuaText('scoreText')
 
-    changeSelection()
+    if getDataFromSave('mainMenu', 'wasFreeplay') then
+        for _, i in pairs(freeplayAssets) do
+            setProperty(i..'.visible', true) end
+        changeSelection()
+    else
+        for _, i in pairs(freeplayAssets) do
+            setProperty(i..'.visible', false) end
+    end
 end
 
 function onCreatePost()
@@ -237,17 +251,24 @@ end
 local holdTime = 0
 
 function onUpdate()
-    if getProperty('norbert.animation.curAnim.name') == 'intro' and getProperty('norbert.animation.curAnim.finished') then
-	    norbertcanIdle = true
-    end
+    for _, i in pairs(freeplayAssets) do
+        setProperty(i..'.visible', isFreeplay) end
+    for _, i in pairs(mainMenuAssets) do
+        setProperty(i..'.visible', isMMenu) end
+    
+    if isMMenu then
+        if getProperty('norbert.animation.curAnim.name') == 'intro' and getProperty('norbert.animation.curAnim.finished') then
+	        norbertcanIdle = true
+        end
 
-    for _, i in pairs(optionGrp) do
-	    if mouseOverlaps(i, 'camOther') then
-	        playAnim(i, 'hover')
-	        if mouseClicked() and canClick then selectOption(getProperty(i..'.ID')) end
-	    else
-	        playAnim(i, 'idle')
-	    end
+        for _, i in pairs(optionGrp) do
+	        if mouseOverlaps(i, 'camOther') then
+	            playAnim(i, 'hover')
+	            if mouseClicked() and canClick then selectOption(getProperty(i..'.ID')) end
+	        else
+	            playAnim(i, 'idle')
+	        end
+        end
     end
 
     if isFreeplay then
@@ -281,6 +302,10 @@ function selectOption(id)
 	    norbertcanIdle = false
 	    setProperty('norbert.offset.x', 77) setProperty('norbert.offset.y', 11)
 	    playAnim('norbert', 'start')
+    elseif id == 'freeplay' then
+        isFreeplay = true
+        isMMenu = false
+        setDataFromSave('mainMenu', 'wasFreeplay', true)
     elseif id == 'left' then
 	    changeWeek(-1)
 	    canClick = true
