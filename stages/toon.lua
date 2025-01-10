@@ -77,7 +77,7 @@ function onBeatHit()
 
     local bopAnim = (curBeat % 2 == 0 and 'dance0' or 'dance1')
     for _, bopper in pairs(boppers) do
-	playAnim(bopper, bopAnim) end
+	    playAnim(bopper, bopAnim) end
 end
 
 function doIdles()
@@ -106,8 +106,8 @@ function onUpdate()
 	end
     end
 
-    charCamX = getMidpointX(targetChar) + 200 + getProperty(targetChar..'.cameraPosition[0]') + getProperty('boyfriendCameraOffset[0]')
-    charCamY = getMidpointY(targetChar) - 100 + getProperty(targetChar..'.cameraPosition[1]') + getProperty('boyfriendCameraOffset[1]')
+    charCamX = getMidpointX(targetChar) + getProperty(targetChar..'.cameraPosition[0]') + 200
+    charCamY = getMidpointY(targetChar) + getProperty(targetChar..'.cameraPosition[1]') - 100
     for i = 0, 3 do
 	if mustHitSection and not getVar('playerSing') and targetChar ~= 'boyfriend' and stringStartsWith(getProperty(targetChar..'.animation.curAnim.name'), getProperty('singAnimations')[i+1]) then
 	    setProperty('camFollow.x', charCamX + animIndex[i+1][1] * 15)
@@ -157,7 +157,7 @@ function onEvent(name, v1, v2)
 
 	    playAnim(toSquish, 'squish', true) setProperty(toSquish..'.specialAnim', true)
 
-	    runTimer('não acredito...', 0.4)
+	    runTimer('não acredito...', 0.35)
 	    function onTimerCompleted(tag) if tag == 'não acredito...' then
 		setProperty(toSquish..'.animation.curAnim.paused', true) end
 	    end

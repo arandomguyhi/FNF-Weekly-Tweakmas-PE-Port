@@ -199,7 +199,8 @@ function onCreate()
 
     makeLuaText('scoreText', '', 0, screenWidth * 0.7, 5)
     setTextSize('scoreText', 32)
-    setTextAlignment('scoreText', 'RIGHT')
+    setTextFont('scoreText', 'vcr.ttf')
+    setProperty('scoreText.borderSize', 0)
     setObjectCamera('scoreText', 'other')
 
     makeLuaSprite('scoreBG', nil, getProperty('scoreText.x') - 6, 0)
@@ -326,14 +327,18 @@ function changeSelection(change, playSoundie)
         end
     end
 
-    setTextString('scoreText', callMethodFromClass('backend.Highscore', 'getScore', {grpSongs[curSelected+1], 0}))
+    local bestScore = callMethodFromClass('backend.Highscore', 'getScore', {grpSongs[curSelected+1], 0})
+    local bestRating = callMethodFromClass('backend.Highscore', 'getRating', {grpSongs[curSelected+1], 0})
+    local ratingSplit = string.sub(math.floor((bestRating*10000)), 1, 2)..'.'..string.sub(math.floor((bestRating*10000)), 2, 3)
+
+    setTextString('scoreText', 'PERSONAL BEST: '..bestScore..' ('.. ratingSplit ..'%)')
     positionHighscore()
 end
 
 function positionHighscore()
-    setProperty('scoreText.x', screenWidth - getProperty('scoreText.width') - 6*4)
+    setProperty('scoreText.x', screenWidth - getProperty('scoreText.width') - 6)
 
-    setProperty('scoreBG.scale.x', screenWidth - getProperty('scoreText.x') + 6*4)
+    setProperty('scoreBG.scale.x', screenWidth - getProperty('scoreText.x') + 6)
     setProperty('scoreBG.x', screenWidth - (getProperty('scoreBG.scale.x') / 2))
 end
 
