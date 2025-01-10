@@ -209,6 +209,13 @@ function onCreate()
     setObjectCamera('scoreBG', 'other')
     addLuaSprite('scoreBG')
 
+    makeLuaText('diffText', '< NORMAL >', 0, getProperty('scoreText.x'), getProperty('scoreText.y') + 36)
+    setTextSize('diffText', 24)
+    setTextFont('diffText', 'vcr.ttf')
+    setProperty('diffText.borderSize', 0)
+    setObjectCamera('diffText', 'other')
+    addLuaText('diffText')
+
     addLuaText('scoreText')
 
     changeSelection()
@@ -295,6 +302,7 @@ function changeWeek(change) if change == nil then change = 0 end
 end
 
 local selectedWeek = false
+
 function selectWeek()
     local weekToPlay = weekList['tweakmas'..curWeek]
     loadWeek(weekToPlay.songs, -1)
@@ -340,6 +348,8 @@ function positionHighscore()
 
     setProperty('scoreBG.scale.x', screenWidth - getProperty('scoreText.x') + 6)
     setProperty('scoreBG.x', screenWidth - (getProperty('scoreBG.scale.x') / 2))
+    setProperty('diffText.x', tonumber(getProperty('scoreBG.x') + (getProperty('scoreBG.width') / 2)))
+    setProperty('diffText.x', getProperty('diffText.x') - (getProperty('diffText.width') / 2))
 end
 
 function mouseOverlaps(obj, camera)
