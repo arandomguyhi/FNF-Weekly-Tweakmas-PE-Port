@@ -179,7 +179,7 @@ function onCreate()
     end
 
     for i = 1, #grpSongs do
-	    createInstance('songText'..i, 'objects.Alphabet', {75, (20*i)+150, grpSongs[i], true, false})
+	    createInstance('songText'..i, 'objects.Alphabet', {75, (10*i)+175, grpSongs[i], true, false})
 	    setProperty('songText'..i..'.isMenuItem', true)
 	    setProperty('songText'..i..'.changeX', false)
 	    setProperty('songText'..i..'.targetY', i)
