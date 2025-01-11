@@ -12,51 +12,50 @@ end
 
 function onEvent(name, value1, value2)
     if name == 'Camera Zoom' then
-	local val1 = tonumber(value1)
+		local val1 = tonumber(value1)
 
-	local targetZoom = getProperty('defaultCamZoom') * val1
-	if value2 ~= '' then
-	    local split = stringSplit(value2, ',')
-	    local duration = 0
-	    local leEase = 'linear'
-	    if split[1] ~= nil then duration = tonumber(math.floor(split[1] / 10)) end
-	    if split[2] ~= nil then leEase = split[2] end
+		local targetZoom = getProperty('defaultCamZoom') * val1
+		if value2 ~= '' then
+	   		local split = stringSplit(value2, ',')
+			local duration = 0
+	    	local leEase = 'linear'
+	    	if split[1] ~= nil then duration = tonumber(split[1]) end
+	    	if split[2] ~= nil then leEase = split[2] end
 
-	    if duration > 0 then
-		runHaxeCode("FlxTween.tween(FlxG.camera, {zoom = ]]..targetZoom..[[}, ]]..duration..[[, {ease: FlxEase.circOut});")
-		--startTween('camTween', 'game', {defaultCamZoom = targetZoom, ['camGame.zoom'] = targetZoom}, duration, {ease = 'circOut'})
-	    else
+	    	if duration > 0 then
+				startTween('camTween', 'game', {['camGame.zoom'] = targetZoom}, duration, {ease = 'circOut'})
+	    	else
+				setProperty('defaultCamZoom', targetZoom)
+	    	end
+		end
 		setProperty('defaultCamZoom', targetZoom)
-	    end
-	end
-	setProperty('defaultCamZoom', targetZoom)
     end
 
     if name == 'HUD Fade' then
-	local leAlpha = tonumber(value1)
-	local duration = tonumber(value2)
+		local leAlpha = tonumber(value1)
+		local duration = tonumber(value2)
 
-	if duration > 0 then
-	    startTween('camHUDAlphaTween', 'camHUD', {alpha = leAlpha}, duration, {ease = 'linear'})
-	else
-	    setProperty('camHUD.alpha', leAlpha)
-	end
-     end
+		if duration > 0 then
+	    	startTween('camHUDAlphaTween', 'camHUD', {alpha = leAlpha}, duration, {ease = 'linear'})
+		else
+	    	setProperty('camHUD.alpha', leAlpha)
+		end
+    end
 end
 
 function onEndSong()
     if isStoryMode then
-	setPropertyFromClass('states.addons.transition.FlxTransitionableState', 'skipNextTransIn', false)
-	setPropertyFromClass('states.addons.transition.FlxTransitionableState', 'skipNextTransOut', false)
+		setPropertyFromClass('states.addons.transition.FlxTransitionableState', 'skipNextTransIn', false)
+		setPropertyFromClass('states.addons.transition.FlxTransitionableState', 'skipNextTransOut', false)
 
-	if getPropertyFromClass('states.PlayState', 'storyPlaylist.length') <= 1 then
-	    callMethodFromClass('backend.Highscore', 'saveScore', {songName, score, difficulty, rating})
+		if getPropertyFromClass('states.PlayState', 'storyPlaylist.length') <= 1 then
+	    	callMethodFromClass('backend.Highscore', 'saveScore', {songName, score, difficulty, rating})
 
-	    setDataFromSave('mainMenu', 'wasStoryMode', true)
-	    loadSong('Main Menu')
+	    	setDataFromSave('mainMenu', 'wasStoryMode', true)
+	    	loadSong('Main Menu')
 
-	    return Function_Stop
-	end
+	    	return Function_Stop
+		end
     end
     return Function_Continue
 end

@@ -233,6 +233,12 @@ function onCreate()
         for _, i in pairs(freeplayAssets) do
             setProperty(i..'.visible', false) end
     end
+
+    makeLuaSprite('transitionSpr')
+    makeGraphic('transitionSpr', screenWidth, screenHeight, '000000')
+    setObjectCamera('transitionSpr', 'other')
+    setProperty('transitionSpr.alpha', 0.001)
+    addLuaSprite('transitionSpr', true)
 end
 
 function onCreatePost()
@@ -251,11 +257,6 @@ end
 local holdTime = 0
 
 function onUpdate()
-    for _, i in pairs(freeplayAssets) do
-        setProperty(i..'.visible', isFreeplay) end
-    for _, i in pairs(mainMenuAssets) do
-        setProperty(i..'.visible', isMMenu) end
-    
     if isMMenu then
         if getProperty('norbert.animation.curAnim.name') == 'intro' and getProperty('norbert.animation.curAnim.finished') then
 	        norbertcanIdle = true
@@ -303,9 +304,24 @@ function selectOption(id)
 	    setProperty('norbert.offset.x', 77) setProperty('norbert.offset.y', 11)
 	    playAnim('norbert', 'start')
     elseif id == 'freeplay' then
-        isFreeplay = true
-        isMMenu = false
-        setDataFromSave('mainMenu', 'wasFreeplay', true)
+        startTween('transIn', 'transitionSpr', {alpha = 1}, 0.25, {})
+        runTimer('loadFreeplay', 1)
+
+        function onTimerCompleted(tag, l, ll)
+            if tag == 'loadFreeplay' then
+                isFreeplay = true
+                isMMenu = false
+        
+                setDataFromSave('mainMenu', 'wasFreeplay', false)
+                startTween('transOut', 'transitionSpr', {alpha = 0.001}, 0.25, {startDelay = 0.15})
+        
+                for _, i in pairs(freeplayAssets) do
+                    setProperty(i..'.visible', true) end
+                for _, i in pairs(mainMenuAssets) do
+                    setProperty(i..'.visible', false) end
+                changeSelection()
+            end
+        end
     elseif id == 'left' then
 	    changeWeek(-1)
 	    canClick = true
