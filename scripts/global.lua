@@ -5,10 +5,10 @@ setDataFromSave('saveScore', 'curWeek', getDataFromSave('saveScore', 'curWeek'))
 local curWeek = getDataFromSave('saveScore', 'curWeek')
 
 -- leave me alone ok, i know this is dumb :sob:
-setDataFromSave('saveScore', 'tweakmas1', getDataFromSave('saveScore', 'tweakmas1'))
-setDataFromSave('saveScore', 'tweakmas2', getDataFromSave('saveScore', 'tweakmas2'))
-setDataFromSave('saveScore', 'bestScorie1', getDataFromSave('saveScore', 'bestScorie1'))
-setDataFromSave('saveScore', 'bestScorie2', getDataFromSave('saveScore', 'bestScorie2'))
+for i = 1,2 do
+	setDataFromSave('saveScore', 'tweakmas'..i, getDataFromSave('saveScore', 'tweakmas'..i))
+	setDataFromSave('saveScore', 'bestScorie'..i, getDataFromSave('saveScore', 'bestScorie'..i))
+end
 
 flushSaveData('saveScore')
 
