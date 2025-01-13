@@ -28,7 +28,7 @@ local weekList = { -- everything in order
 	    icons = {'charlie', 'futaba', 'alph', 'grinch', 'simian', 'quillgin'}
     },
     ['tweakmas2'] = {
-	    songs = {'Frostburn', 'Park', 'Hot Drop', 'Final Wager', 'Dead End', 'Dying Wish'},
+	    songs = {'Frostburn', 'Hot Drop'},
 	    icons = {'king', 'picopark', 'sunspot', 'hr', 'employees', 'tf2'}
     }
 }
@@ -49,6 +49,7 @@ local freeplayAssets = {}
 initSaveData('mainMenu')
 setDataFromSave('mainMenu', 'wasStoryMode', true)
 setDataFromSave('mainMenu', 'wasFreeplay', false)
+flushSaveData('mainMenu')
 
 local wasStoryMode = getDataFromSave('mainMenu', 'wasStoryMode')
 
@@ -65,11 +66,20 @@ function onCreate()
 
     makeLuaText('tweakTxt', 'TWEAKMAS 0', 0, 1080, 40)
     setTextSize('tweakTxt', 27)
-    setTextFont('tweakTxt', 'VCR OSD Mono')
-    setTextColor('tweakTxt', 'ffffff')
+    setTextFont('tweakTxt', 'vcr.ttf')
+    setProperty('tweakTxt.borderSize', 0)
     setObjectCamera('tweakTxt', 'other')
     addLuaText('tweakTxt', true)
     table.insert(mainMenuAssets, 'tweakTxt')
+
+    makeLuaText('weekScore', 'SCORE:0', 0, 850, 0)
+    setTextSize('weekScore', 27)
+    setTextFont('weekScore', 'vcr.ttf')
+    setProperty('weekScore.borderSize', 0)
+    setProperty('weekScore.y', getProperty('tweakTxt.y'))
+    setObjectCamera('weekScore', 'other')
+    addLuaText('weekScore', true)
+    table.insert(mainMenuAssets, 'weekScore')
 
     makeLuaSprite('weeklogo', assetPath..'logos/placeholder', 173, 213)
     setObjectCamera('weeklogo', 'other')
@@ -85,11 +95,6 @@ function onCreate()
     table.insert(mainMenuAssets, 'norbert')
 
     runTimer('norbertIntro', 0.5)
-    function onTimerCompleted(tag) if tag == 'norbertIntro' then
-	    setProperty('norbert.visible', true)
-	    setProperty('norbert.offset.x', 1393) setProperty('norbert.offset.y', 154)
-	    playAnim('norbert', 'intro')
-    end end
 
     makeLuaSprite('bar') makeGraphic('bar', 1233, 141, '000000')
     screenCenter('bar', 'X')
@@ -118,7 +123,7 @@ function onCreate()
     table.insert(mainMenuAssets, 'newsTxt2')
 
     makeLuaSprite('border', assetPath..'border', -19, -23)
-    setObjectCamera('border', 'other')
+    --setObjectCamera('border', 'other')
     addLuaSprite('border', true)
     table.insert(mainMenuAssets, 'border')
 
@@ -132,7 +137,7 @@ function onCreate()
 	    makeAnimatedLuaSprite('button'..i, assetPath..'button_'..options[i])
 	    addAnimationByPrefix('button'..i, 'idle', options[i]..'0', 24, false)
 	    addAnimationByPrefix('button'..i, 'hover', options[i]..' hover0', 24, false)
-	    setProperty('button'..i..'.x', 262 * i - 214)
+	    setProperty('button'..i..'.x', 262 * i - 218)
 	    setProperty('button'..i..'.y', 41)
 	    setProperty('button'..i..'.ID', i)
 	    setObjectCamera('button'..i, 'other')
@@ -226,6 +231,7 @@ function onCreate()
     addLuaText('scoreText')
 
     if getDataFromSave('mainMenu', 'wasFreeplay') then
+        setPropertyFromClass('flixel.FlxG', 'mouse.visible', false)
         for _, i in pairs(freeplayAssets) do
             setProperty(i..'.visible', true) end
         changeSelection()
@@ -283,13 +289,14 @@ function onUpdate()
 
         if keyboardJustPressed('SPACE') then
             loadSong(grpSongs[curSelected+1])
+        elseif getProperty('controls.BACK') then
+            playSound('cancelMenu')
+
+            startTween('transIn', 'transitionSpr', {alpha = 1}, 0.25, {})
+            runTimer('loadMMenu', 1)
         end
     end
 end
-
---[[function onPause()
-    return Function_Stop
-end]]
 
 function selectOption(id)
     canClick = false
@@ -304,24 +311,9 @@ function selectOption(id)
 	    setProperty('norbert.offset.x', 77) setProperty('norbert.offset.y', 11)
 	    playAnim('norbert', 'start')
     elseif id == 'freeplay' then
+        setPropertyFromClass('flixel.FlxG', 'mouse.visible', false)
         startTween('transIn', 'transitionSpr', {alpha = 1}, 0.25, {})
         runTimer('loadFreeplay', 1)
-
-        function onTimerCompleted(tag, l, ll)
-            if tag == 'loadFreeplay' then
-                isFreeplay = true
-                isMMenu = false
-        
-                setDataFromSave('mainMenu', 'wasFreeplay', false)
-                startTween('transOut', 'transitionSpr', {alpha = 0.001}, 0.25, {startDelay = 0.15})
-        
-                for _, i in pairs(freeplayAssets) do
-                    setProperty(i..'.visible', true) end
-                for _, i in pairs(mainMenuAssets) do
-                    setProperty(i..'.visible', false) end
-                changeSelection()
-            end
-        end
     elseif id == 'left' then
 	    changeWeek(-1)
 	    canClick = true
@@ -340,6 +332,11 @@ function changeWeek(change) if change == nil then change = 0 end
 	    curWeek = #loadedWeeks end
 
     loadGraphic('weeklogo', assetPath..'logos/'..loadedWeeks[curWeek][2], false)
+
+    setTextString('weekScore', 'SCORE:'..getDataFromSave('saveScore', 'bestScorie'..curWeek))
+    setTextString('tweakTxt', 'TWEAKMAS '..curWeek)
+
+    setDataFromSave('saveScore', 'curWeek', curWeek)
 end
 
 local selectedWeek = false
@@ -347,6 +344,8 @@ local selectedWeek = false
 function selectWeek()
     local weekToPlay = weekList['tweakmas'..curWeek]
     loadWeek(weekToPlay.songs, -1)
+
+    setDataFromSave('saveScore', 'tweakmas'..curWeek, 0)
 end
 
 function changeSelection(change, playSoundie)
@@ -391,6 +390,50 @@ function positionHighscore()
     setProperty('scoreBG.x', screenWidth - (getProperty('scoreBG.scale.x') / 2))
     setProperty('diffText.x', tonumber(getProperty('scoreBG.x') + (getProperty('scoreBG.width') / 2)))
     setProperty('diffText.x', getProperty('diffText.x') - (getProperty('diffText.width') / 2))
+end
+
+function onTimerCompleted(tag)
+    if tag == 'norbertIntro' then
+	    setProperty('norbert.visible', true)
+	    setProperty('norbert.offset.x', 1393) setProperty('norbert.offset.y', 154)
+	    playAnim('norbert', 'intro')
+    end
+
+    if tag == 'loadMMenu' then
+        isFreeplay = false
+        
+        isMMenu = true
+        canClick = true
+
+        setPropertyFromClass('flixel.FlxG', 'mouse.visible', true)
+        
+        setDataFromSave('mainMenu', 'wasStoryMode', true)
+        setDataFromSave('mainMenu', 'wasFreeplay', false)
+        startTween('transOut', 'transitionSpr', {alpha = 0.001}, 0.25, {startDelay = 0.15})
+        
+        for _, i in pairs(freeplayAssets) do
+            setProperty(i..'.visible', false) end
+        for _, i in pairs(mainMenuAssets) do
+            setProperty(i..'.visible', true) end
+        curWeek = 1
+        changeWeek()
+    end
+
+    if tag == 'loadFreeplay' then
+        isFreeplay = true
+        isMMenu = false
+
+        setDataFromSave('mainMenu', 'wasStoryMode', false)
+        setDataFromSave('mainMenu', 'wasFreeplay', true)
+        startTween('transOut', 'transitionSpr', {alpha = 0.001}, 0.25, {startDelay = 0.15})
+
+        for _, i in pairs(freeplayAssets) do
+            setProperty(i..'.visible', true) end
+        for _, i in pairs(mainMenuAssets) do
+            setProperty(i..'.visible', false) end
+        curSelected = 0
+        changeSelection()
+    end
 end
 
 function mouseOverlaps(obj, camera)

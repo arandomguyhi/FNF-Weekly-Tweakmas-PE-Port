@@ -1,5 +1,20 @@
 luaDebugMode = true
+
+initSaveData('saveScore')
+setDataFromSave('saveScore', 'curWeek', getDataFromSave('saveScore', 'curWeek'))
+local curWeek = getDataFromSave('saveScore', 'curWeek')
+
+-- leave me alone ok, i know this is dumb :sob:
+setDataFromSave('saveScore', 'tweakmas1', getDataFromSave('saveScore', 'tweakmas1'))
+setDataFromSave('saveScore', 'tweakmas2', getDataFromSave('saveScore', 'tweakmas2'))
+setDataFromSave('saveScore', 'bestScorie1', getDataFromSave('saveScore', 'bestScorie1'))
+setDataFromSave('saveScore', 'bestScorie2', getDataFromSave('saveScore', 'bestScorie2'))
+
+flushSaveData('saveScore')
+
 function onCreatePost()
+	debugPrint(getDataFromSave('saveScore', 'bestScorie2'))
+	debugPrint(getDataFromSave('saveScore', 'curWeek'))
     runHaxeCode([[
 	createGlobalCallback('snapCamFollowToPos', function(xpos:Float, ypos:Float, ?isForced:Bool) {
 	    game.camGame.scroll.x = xpos - (FlxG.width / 2);
@@ -48,8 +63,15 @@ function onEndSong()
 		setPropertyFromClass('states.addons.transition.FlxTransitionableState', 'skipNextTransIn', false)
 		setPropertyFromClass('states.addons.transition.FlxTransitionableState', 'skipNextTransOut', false)
 
+		setDataFromSave('saveScore', 'tweakmas'..curWeek, getDataFromSave('saveScore', 'tweakmas'..curWeek) + score)
+
 		if getPropertyFromClass('states.PlayState', 'storyPlaylist.length') <= 1 then
 	    	callMethodFromClass('backend.Highscore', 'saveScore', {songName, score, difficulty, rating})
+
+			if getDataFromSave('saveScore', 'tweakmas'..curWeek) > getDataFromSave('saveScore', 'bestScorie'..curWeek) then
+				setDataFromSave('saveScore', 'bestScorie'..curWeek, getDataFromSave('saveScore', 'tweakmas'..curWeek))
+				flushSaveData('saveScore')
+			end
 
 	    	setDataFromSave('mainMenu', 'wasStoryMode', true)
 	    	loadSong('Main Menu')
