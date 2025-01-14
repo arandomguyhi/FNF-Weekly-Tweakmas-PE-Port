@@ -21,15 +21,15 @@ end
 
 function onStepHit()
     if curStep == 1280 then
-        setProperty('dad.idleSuffix', '-alt')
         altTime = true
 
         makeVideoSprite('ohyeah', 'femtanyl2', 0, 0, 'game', true)
-        setGraphicSize('ohyeah', screenWidth, screenHeight * 1.25, false)
-        --screenCenter('ohyeah')
-        setProperty('ohyeah.x', getProperty('ohyeah.x') + 250)
-        setProperty('ohyeah.y', getProperty('ohyeah.y') + 200)
-        --setBlendMode('ohyeah', 'subtract')
+        setObjectOrder('ohyeah', getObjectOrder('dadGroup'))
+        scaleObject('ohyeah', 2, 2)
+        screenCenter('ohyeah')
+        setProperty('ohyeah.x', getProperty('ohyeah.x') - 220)
+        setProperty('ohyeah.y', getProperty('ohyeah.y')-25)
+        setBlendMode('ohyeah', 'subtract')
     elseif curStep == 1536 then
         setProperty('camGame.visible', false)
         setProperty('camHUD.visible', false)
