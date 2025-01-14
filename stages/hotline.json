@@ -1,6 +1,7 @@
 {
 	"directory": "",
 	"defaultZoom": 1.55,
+	"stageUI": "../TweakAssets/stages/Tweakmas/Third Edition/jack/combos",
 	"isPixelStage": false,
 
 	"boyfriend": [550, 271],
