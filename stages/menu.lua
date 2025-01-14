@@ -28,7 +28,7 @@ local weekList = { -- everything in order
 	    icons = {'charlie', 'futaba', 'alph', 'grinch', 'simian', 'quillgin'}
     },
     ['tweakmas2'] = {
-	    songs = {'Frostburn', 'Park', 'Hot Drop', 'Final Wisher', 'Dead End', 'Dying Wish'},
+	    songs = {'Frostburn', 'Park', 'Hot Drop', 'Final Wager', 'Dead End', 'Dying Wish'},
 	    icons = {'king', 'picopark', 'sunspot', 'hr', 'employees', 'tf2'}
     }
 }
@@ -123,7 +123,7 @@ function onCreate()
     table.insert(mainMenuAssets, 'newsTxt2')
 
     makeLuaSprite('border', assetPath..'border', -19, -23)
-    --setObjectCamera('border', 'other')
+    setObjectCamera('border', 'other')
     addLuaSprite('border', true)
     table.insert(mainMenuAssets, 'border')
 

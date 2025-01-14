@@ -12,9 +12,15 @@ end
 
 flushSaveData('saveScore')
 
+function onCreate()
+	for i,k in pairs({'tweakmas', 'bestScorie'}) do
+		if getDataFromSave('saveScore', k..i) == nil then
+			setDataFromSave('saveScore', k..i, 0)
+		end
+	end
+end
+
 function onCreatePost()
-	debugPrint(getDataFromSave('saveScore', 'bestScorie2'))
-	debugPrint(getDataFromSave('saveScore', 'curWeek'))
     runHaxeCode([[
 	createGlobalCallback('snapCamFollowToPos', function(xpos:Float, ypos:Float, ?isForced:Bool) {
 	    game.camGame.scroll.x = xpos - (FlxG.width / 2);
