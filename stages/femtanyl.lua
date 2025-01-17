@@ -39,5 +39,6 @@ end
 function opponentNoteHit(id,noteData)
     if altTime then
         playAnim('dad', getProperty('singAnimations')[noteData+1]..'-alt', true)
+        setProperty('dad.holdTimer', 0)
     end
 end

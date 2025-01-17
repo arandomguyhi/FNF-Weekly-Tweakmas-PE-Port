@@ -123,11 +123,6 @@ function onBeatHit()
         setProperty('boyfriend.animation.curAnim.curFrame', 0)
     end
 
-    if getProperty('camZooming') then
-        setProperty('camHUD.zoom', getProperty('camHUD.zoom') + 0.02)
-        setProperty('camGame.zoom', getProperty('camGame.zoom') + 0.015)
-    end
-
     strength = strength + mosaicMult
     if strength <= 0 then strength = 1 end
     setShaderFloatArray('mosaic', 'uBlocksize', {strength, strength})
@@ -145,14 +140,21 @@ function onBeatHit()
         ]])
     end
 
-    local cu = -1
-    for i = 0,3 do
-        cu=cu*-1
+    if curStep >= 876 and curStep < 1280 then
+        if getProperty('camZooming') then
+            setProperty('camHUD.zoom', getProperty('camHUD.zoom') + 0.02)
+            setProperty('camGame.zoom', getProperty('camGame.zoom') + 0.015)
+        end
 
-        setProperty('playerStrums.members['..i..'].x', getVar('x'..i) + (curBeat % 2 == 0 and -75 or 75))
-        setProperty('playerStrums.members['..i..'].y', getVar('y'..i) + 50*cu)
-        setProperty('playerStrums.members['..i..'].scale.y', getVar('sY'..i) + (curBeat % 2 == 0 and -0.5 or 0.5)*cu)
-        startTween('scale'..i, 'playerStrums.members['..i..']', {x = getVar('x'..i), y = getVar('y'..i), ['scale.y'] = getVar('sY'..i)}, (stepCrochet/1000)*2, {ease = 'quadOut'})
+        local cu = -1
+        for i = 0,3 do
+            cu=cu*-1
+
+            setProperty('playerStrums.members['..i..'].x', getVar('x'..i) + (curBeat % 2 == 0 and -75 or 75))
+            setProperty('playerStrums.members['..i..'].y', getVar('y'..i) + 30*cu)
+            setProperty('playerStrums.members['..i..'].scale.y', getVar('sY'..i) + (curBeat % 4 == 0 and -0.5 or 0.5)*cu)
+            startTween('scale'..i, 'playerStrums.members['..i..']', {x = getVar('x'..i), y = getVar('y'..i), ['scale.y'] = getVar('sY'..i)}, (stepCrochet/1000)*2, {ease = 'cubeOut'})
+        end
     end
 end
 
@@ -184,8 +186,8 @@ function onCreatePost()
     setObjectCamera('lbar', 'other')
     addLuaSprite('lbar')
 
-    makeLuaSprite('rbar', nil, screenWidth-260)
-    makeGraphic('rbar', 290, screenHeight, '000000')
+    makeLuaSprite('rbar', nil, screenWidth-275)
+    makeGraphic('rbar', 275, screenHeight, '000000')
     setObjectCamera('rbar', 'other')
     addLuaSprite('rbar')
 
@@ -219,6 +221,12 @@ function onCreatePost()
     setProperty('iconP1.iconOffsets[1]', -130)
     setProperty('iconP2.iconOffsets[1]', -130)
 
+    loadGraphic('healthBar.bg', path..'Bar', false)
+    scaleObject('healthBar.bg', 1.0325, 0.85)
+    screenCenter('healthBar.bg', 'X')
+    setProperty('healthBar.bg.offset.x', getProperty('healthBar.bg.offset.x')+5)
+    setProperty('healthBar.bg.offset.y', getProperty('healthBar.bg.offset.y')+5)
+
     snapCamFollowToPos(1280 / 2, (720 / 2) - 100, false)
 
     setProperty('comboGroup.visible', false)
@@ -228,7 +236,7 @@ function onSongStart()
     cameraFlash('camGame', '000000', 12)
 
     runHaxeCode([[
-        FlxTween.num(2, 0.8, 12, {ease: FlxEase.quadOut, onUpdate: (t)->{
+        FlxTween.num(1.6, 0.75, 12, {ease: FlxEase.quadOut, onUpdate: (t)->{
             FlxG.camera.zoom = t.value;
         }});
     
@@ -262,6 +270,7 @@ function onSectionHit()
     counter = counter + 1
     if counter % 2 == 0 then
         fuck = not fuck
+        altTime = not fuck
 
         callMethod('iconP2.changeIcon', {fuck and 'bot1' or 'bot2'})
         setProperty('iconP2.iconOffsets[1]', -130)
@@ -285,5 +294,12 @@ function onStepHit()
             }});
             game.camHUD.fade(FlxColor.BLACK, (Conductor.stepCrochet / 1000) * 48);
         ]])
+    end
+end
+
+function opponentNoteHit(id,noteData)
+    if altTime then
+        playAnim('dad', getProperty('singAnimations')[noteData+1]..'-alt', true)
+        setProperty('dad.holdTimer', 0)
     end
 end
