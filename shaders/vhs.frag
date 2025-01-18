@@ -2,34 +2,13 @@
 
 #pragma format R8G8B8A8_SRGB
 
-#define NTSC_CRT_GAMMA 2.5
-#define NTSC_MONITOR_GAMMA 2.0
-
-#define TWO_PHASE
-#define COMPOSITE
-//#define THREE_PHASE
-// #define SVIDEO
-
 // begin params
 #define PI 3.14159265
 
-#if defined(TWO_PHASE)
-    #define CHROMA_MOD_FREQ (4.0 * PI / 15.0)
-#elif defined(THREE_PHASE)
-    #define CHROMA_MOD_FREQ (PI / 3.0)
-#endif
-
-#if defined(COMPOSITE)
-    #define SATURATION 1.0
-    #define BRIGHTNESS 1.0
-    #define ARTIFACTING 1.0
-    #define FRINGING 1.0
-#elif defined(SVIDEO)
-    #define SATURATION 1.0
-    #define BRIGHTNESS 1.0
-    #define ARTIFACTING 0.0
-    #define FRINGING 0.0
-#endif
+#define SATURATION 1.0
+#define BRIGHTNESS 1.0
+#define ARTIFACTING 1.0
+#define FRINGING 1.0
 // end params
 
 uniform int uFrame;
@@ -37,13 +16,11 @@ uniform float uInterlace;
 
 // fragment compatibility #defines
 
-#if defined(COMPOSITE) || defined(SVIDEO)
 mat3 mix_mat = mat3(
     BRIGHTNESS, FRINGING, FRINGING,
     ARTIFACTING, 2.0 * SATURATION, 0.0,
     ARTIFACTING, 0.0, 2.0 * SATURATION
 );
-#endif
 
 // begin ntsc-rgbyuv
 const mat3 yiq2rgb_mat = mat3(
@@ -143,16 +120,12 @@ vec4 pass1(vec2 uv)
 {
     vec2 fragCoord = uv * openfl_TextureSize;
 
-    vec4 cola = flixel_texture2D(bitmap, uv).rgba;
+    vec4 cola = texture2D(bitmap, uv).rgba;
     vec3 yiq = rgb2yiq(cola.rgb);
 
-    #if defined(TWO_PHASE)
-        float chroma_phase = PI * (mod(fragCoord.y, 2.0) + float(uFrame));
-    #elif defined(THREE_PHASE)
-        float chroma_phase = 0.6667 * PI * (mod(fragCoord.y, 3.0) + float(uFrame));
-    #endif
+    float chroma_phase = PI * (mod(fragCoord.y, 2.0) + float(uFrame));
 
-    float mod_phase = chroma_phase + fragCoord.x * CHROMA_MOD_FREQ;
+    float mod_phase = chroma_phase + fragCoord.x * (4.0 * PI / 15.0);
 
     float i_mod = cos(mod_phase);
     float q_mod = sin(mod_phase);
@@ -189,5 +162,5 @@ void main()
         vec4(luma_filter[TAPS], chroma_filter[TAPS], chroma_filter[TAPS], 1.0);
 
     vec3 rgb = yiq2rgb(signal.xyz);
-    gl_FragColor = vec4(pow(rgb, vec3(NTSC_CRT_GAMMA / NTSC_MONITOR_GAMMA)), flixel_texture2D(bitmap, uv).a);
+    gl_FragColor = vec4(pow(rgb, vec3(2.5 / 2.0)), texture2D(bitmap, uv).a);
 }

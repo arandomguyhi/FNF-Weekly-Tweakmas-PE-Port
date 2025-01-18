@@ -140,7 +140,7 @@ function onBeatHit()
         ]])
     end
 
-    if curStep >= 876 and curStep < 1280 then
+    if curStep >= 896 and curStep < 1280 then
         if getProperty('camZooming') then
             setProperty('camHUD.zoom', getProperty('camHUD.zoom') + 0.02)
             setProperty('camGame.zoom', getProperty('camGame.zoom') + 0.015)
@@ -152,7 +152,7 @@ function onBeatHit()
 
             setProperty('playerStrums.members['..i..'].x', getVar('x'..i) + (curBeat % 2 == 0 and -75 or 75))
             setProperty('playerStrums.members['..i..'].y', getVar('y'..i) + 30*cu)
-            setProperty('playerStrums.members['..i..'].scale.y', getVar('sY'..i) + (curBeat % 4 == 0 and -0.5 or 0.5)*cu)
+            setProperty('playerStrums.members['..i..'].scale.y', getVar('sY'..i) + (curBeat % 2 == 0 and -0.5 or 0.5)*cu)
             startTween('scale'..i, 'playerStrums.members['..i..']', {x = getVar('x'..i), y = getVar('y'..i), ['scale.y'] = getVar('sY'..i)}, (stepCrochet/1000)*2, {ease = 'cubeOut'})
         end
     end
