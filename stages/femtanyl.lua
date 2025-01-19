@@ -13,12 +13,13 @@ function onCreate()
     addLuaSprite('idk')
 
     if buildTarget ~= 'windows' then
-        createInstance('backVideo', 'backend.VideoSpriteManager', {0, 0, 1280, screenHeight*1.25})
+        createInstance('backVideo', 'backend.VideoSpriteManager', {0, 0, screenWidth, screenHeight*})
 		setObjectCamera('backVideo', 'camGame')
         setObjectOrder('backVideo', getObjectOrder('dadGroup'))
+        scaleObject('backVideo', 2, 2)
         screenCenter('backVideo')
-        setProperty('backVideo.x', getProperty('backVideo.x') + 250)
-        setProperty('backVideo.y', getProperty('backVideo.y') + 200)
+        setProperty('backVideo.x', getProperty('backVideo.x') - 220)
+        setProperty('backVideo.y', getProperty('backVideo.y') - 20)
         setBlendMode('backVideo', 'subtract')
 		addInstance('backVideo')
     end
