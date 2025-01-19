@@ -1,4 +1,5 @@
 local path = '../TweakAssets/stages/Tweakmas/Third Edition/femtanyl/'
+local videoPath = callMethodFromClass('backend.Paths', 'video', {'femtanyl2'})
 
 luaDebugMode = true
 function onCreate()
@@ -10,6 +11,17 @@ function onCreate()
     addAnimationByPrefix('idk', 'idle', 'zombae0', 24, true)
     updateHitbox('idk')
     addLuaSprite('idk')
+
+    if buildTarget ~= 'windows' then
+        createInstance('backVideo', 'backend.VideoSpriteManager', {0, 0, 1280, screenHeight*1.25})
+		setObjectCamera('backVideo', 'camGame')
+        setObjectOrder('backVideo', getObjectOrder('dadGroup'))
+        screenCenter('backVideo')
+        setProperty('backVideo.x', getProperty('backVideo.x') + 250)
+        setProperty('backVideo.y', getProperty('backVideo.y') + 200)
+        setBlendMode('backVideo', 'subtract')
+		addInstance('backVideo')
+    end
 end
 
 function onCreatePost()
@@ -23,13 +35,17 @@ function onStepHit()
     if curStep == 1280 then
         altTime = true
 
-        makeVideoSprite('ohyeah', 'femtanyl2', 0, 0, 'game', true)
-        setObjectOrder('ohyeah', getObjectOrder('dadGroup'))
-        scaleObject('ohyeah', 2, 2)
-        screenCenter('ohyeah')
-        setProperty('ohyeah.x', getProperty('ohyeah.x') - 220)
-        setProperty('ohyeah.y', getProperty('ohyeah.y')-25)
-        setBlendMode('ohyeah', 'subtract')
+        if buildTarget == 'windows' then
+            makeVideoSprite('ohyeah', 'femtanyl2', 0, 0, 'game', true)
+            setObjectOrder('ohyeah', getObjectOrder('dadGroup'))
+            scaleObject('ohyeah', 2, 2)
+            screenCenter('ohyeah')
+            setProperty('ohyeah.x', getProperty('ohyeah.x') - 220)
+            setProperty('ohyeah.y', getProperty('ohyeah.y')-25)
+            setBlendMode('ohyeah', 'subtract')
+        else
+            callMethod('backVideo.startVideo', {videoPath, true})
+        end
     elseif curStep == 1536 then
         setProperty('camGame.visible', false)
         setProperty('camHUD.visible', false)
