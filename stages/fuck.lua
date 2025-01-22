@@ -17,7 +17,18 @@ function onCreatePost()
     setProperty('gf.flipX', false)
 
     if not skipIntro then
-	initLuaShader('3D')
+		if shadersEnabled then
+			initLuaShader('3D')
+
+			runHaxeCode([[
+	    		var sh = game.createRuntimeShader('3D');
+				for (floats in ['xrot', 'yrot', 'zrot', 'xpos', 'ypos', 'zpos'])
+					sh.setFloat(floats, 0)
+
+	    		camGame.setFilters([new ShaderFilter(sh)]);
+	    		setVar('sh', sh);
+			]])
+		end
 
 	setProperty('camGame.visible', false)
 
@@ -34,11 +45,6 @@ function onCreatePost()
 	addLuaSprite('overlay')
 
 	setProperty('camHUD.visible', false)
-	runHaxeCode([[
-	    var sh = game.createRuntimeShader('3D');
-	    camGame.setFilters([new ShaderFilter(sh)]);
-	    setVar('sh', sh);
-	]])
     end
 end
 

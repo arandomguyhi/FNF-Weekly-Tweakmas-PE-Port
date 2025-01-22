@@ -3440,6 +3440,7 @@
 		],
 		"player2": "jack",
 		"player3": null,
+		"disableNoteRGB": true,
 		"song": "Pop Portico",
 		"stage": "hotline",
 		"needsVoices": true,
