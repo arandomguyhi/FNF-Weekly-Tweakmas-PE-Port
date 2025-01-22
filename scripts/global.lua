@@ -9,16 +9,9 @@ for i = 1,2 do
 	setDataFromSave('saveScore', 'tweakmas'..i, getDataFromSave('saveScore', 'tweakmas'..i))
 	setDataFromSave('saveScore', 'bestScorie'..i, getDataFromSave('saveScore', 'bestScorie'..i))
 end
-
 flushSaveData('saveScore')
 
-function onCreate()
-	for i,k in pairs({'tweakmas', 'bestScorie'}) do
-		if getDataFromSave('saveScore', k..i) == nil then
-			setDataFromSave('saveScore', k..i, 0)
-		end
-	end
-end
+precacheImage('noteSplashes/noteSplashes')
 
 function onCreatePost()
     runHaxeCode([[
@@ -31,7 +24,15 @@ function onCreatePost()
     ]])
 end
 
+function onSpawnNote(i)
+    setPropertyFromGroup('notes', i, 'noteSplashData.useRGBShader', false)
+end
+
 function onEvent(name, value1, value2)
+	if name == 'Set Cam Zoom' then
+		setProperty('defaultCamZoom', tonumber(value1))
+	end
+	
     if name == 'Camera Zoom' then
 		local val1 = tonumber(value1)
 

@@ -140,9 +140,9 @@ function onBeatHit()
         ]])
     end
 
-    if curStep >= 896 and curStep < 1280 then
+    if curStep >= 894 and curStep < 1280 then
         if getProperty('camZooming') then
-            setProperty('camHUD.zoom', getProperty('camHUD.zoom') + 0.02)
+            setProperty('camHUD.zoom', getProperty('camHUD.zoom') + 0.025)
             setProperty('camGame.zoom', getProperty('camGame.zoom') + 0.015)
         end
 
@@ -152,8 +152,9 @@ function onBeatHit()
 
             setProperty('playerStrums.members['..i..'].x', getVar('x'..i) + (curBeat % 2 == 0 and -75 or 75))
             setProperty('playerStrums.members['..i..'].y', getVar('y'..i) + 30*cu)
-            setProperty('playerStrums.members['..i..'].scale.y', getVar('sY'..i) + (curBeat % 2 == 0 and -0.5 or 0.5)*cu)
-            startTween('scale'..i, 'playerStrums.members['..i..']', {x = getVar('x'..i), y = getVar('y'..i), ['scale.y'] = getVar('sY'..i)}, (stepCrochet/1000)*2, {ease = 'cubeOut'})
+            setProperty('playerStrums.members['..i..'].scale.x', getVar('sX'..i) + (curBeat % 4 == 0 and 0.5 or 0.2)*cu)
+            setProperty('playerStrums.members['..i..'].scale.y', getVar('sY'..i) + (curBeat % 2 == 0 and -0.5 or 0.5))
+            startTween('scale'..i, 'playerStrums.members['..i..']', {x = getVar('x'..i), y = getVar('y'..i), ['scale.x'] = getVar('sX'..i), ['scale.y'] = getVar('sY'..i)}, (stepCrochet/1000)*2, {ease = 'cubeOut'})
         end
     end
 end
@@ -208,6 +209,7 @@ function onCreatePost()
 
         setVar('x'..i, getProperty('playerStrums.members['..i..'].x'))
         setVar('y'..i, getProperty('playerStrums.members['..i..'].y'))
+        setVar('sX'..i, getProperty('playerStrums.members['..i..'].scale.x'))
         setVar('sY'..i, getProperty('playerStrums.members['..i..'].scale.y'))
     end
     setObjectOrder('noteGroup', getObjectOrder('flash1'))

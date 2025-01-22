@@ -6414,6 +6414,7 @@
 		],
 		"player3": null,
 		"keys": 4,
+		"disableNoteRGB": true,
 		"song": "L3T-M3-BR34K",
 		"stage": "femtanyl",
 		"validScore": true,

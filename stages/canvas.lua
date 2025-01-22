@@ -86,8 +86,8 @@ function onSongStart()
     doTweenAlpha('unblack', 'blackScreen', 0, 5, 'smoothStepInOut')
 end
 
-function onEvent(eventName, v1, v2)
-    if eventName == 'Companion Events' then
+function onEvent(name, v1, v2)
+    if name == 'Companion Events' then
         if v1 == 'shapes' then
             setProperty('isCameraOnForcedPos', true)
             startTween('camZoom', 'game', {defaultCamZoom = 0.95}, 4, {ease = 'smoothStepInOut'})
@@ -102,7 +102,7 @@ function onEvent(eventName, v1, v2)
         elseif v1 == 'zoom out' then
             setProperty('isCameraOnForcedPos', true)
             startTween('camZoomOut', 'game', {defaultCamZoom = 0.95}, 4, {ease = 'smoothStepInOut'})
-            startTween('OMG TETOOOO', 'camFollow', {x = 900, y = 535}, 4, {ease = 'smoothStepInOut', onComplete = 'forceCamera'})
+            startTween('OMG TETOOOO', 'camFollow', {x = 900, y = 535}, 4, {ease = 'smoothStepInOut'})
             setProperty('dad.alpha', 1)
             startTween('TETOREVEAL', 'iconP2', {alpha = 1}, 2.5, {ease ='quadOut', startDelay = 2})
         elseif v1 == 'reveal over' then
@@ -204,6 +204,10 @@ function onEvent(eventName, v1, v2)
             triggerEvent('Alt Idle Animation', 'dad', v2)
         end
     end
+
+    if name == 'Set Cam Zoom' then
+	debugPrint('hi?')
+end
 end
 
 function onDestroy()

@@ -13,7 +13,7 @@ function onCreate()
     addLuaSprite('idk')
 
     if buildTarget ~= 'windows' then
-        createInstance('backVideo', 'backend.VideoSpriteManager', {0, 0, screenWidth, screenHeight*})
+        createInstance('backVideo', 'backend.VideoSpriteManager', {0, 0, screenWidth, screenHeight})
 		setObjectCamera('backVideo', 'camGame')
         setObjectOrder('backVideo', getObjectOrder('dadGroup'))
         scaleObject('backVideo', 2, 2)
