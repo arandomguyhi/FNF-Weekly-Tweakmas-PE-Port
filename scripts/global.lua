@@ -11,6 +11,11 @@ for i = 1,3 do
 end
 flushSaveData('saveScore')
 
+initSaveData('mainMenu')
+setDataFromSave('mainMenu', 'wasStoryMode', getDataFromSave('mainMenu', 'wasStoryMode') == nil and true or getDataFromSave('mainMenu', 'wasStoryMode')) -- repeating the dumb logic :fire:
+setDataFromSave('mainMenu', 'wasFreeplay', getDataFromSave('mainMenu', 'wasFreeplay') == nil and false or getDataFromSave('mainMenu', 'wasFreeplay'))
+flushSaveData('mainMenu')
+
 precacheImage('noteSplashes/noteSplashes')
 
 function onCreatePost()
@@ -66,6 +71,14 @@ function onEvent(name, value1, value2)
 end
 
 function onEndSong()
+	if not isStoryMode then
+		callMethodFromClass('backend.Highscore', 'saveScore', {songName, score, difficulty, rating})
+		setDataFromSave('mainMenu', 'wasFreeplay', true)
+		loadSong('Main Menu')
+
+		return Function_Stop
+	end
+
     if isStoryMode then
 		setPropertyFromClass('states.addons.transition.FlxTransitionableState', 'skipNextTransIn', false)
 		setPropertyFromClass('states.addons.transition.FlxTransitionableState', 'skipNextTransOut', false)
@@ -86,5 +99,5 @@ function onEndSong()
 	    	return Function_Stop
 		end
     end
-    return Function_Continue
+	return Function_Continue
 end

@@ -98,13 +98,14 @@ end
 function onCreatePost()
     setPropertyFromClass('flixel.FlxG', 'camera.height', 720-125)
     setPropertyFromClass('flixel.FlxG', 'camera.y', getPropertyFromClass('flixel.FlxG', 'camera.y')+125/2)
-    setProperty('camHUD.height', 657)
+    setProperty('camHUD.height', 720-125)
+    setProperty('camHUD.y', getProperty('camHUD.y') + 125/2)
 
     setProperty('camHUD.zoom', 0.61)
 
     for i = 0,3 do
         setProperty('playerStrums.members['..i..'].x', 435 + (112 * i))
-        setProperty('playerStrums.members['..i..'].y', _G['defaultPlayerStrumY'..i] - 100)
+        setProperty('playerStrums.members['..i..'].y', _G['defaultPlayerStrumY'..i] + (not downscroll and -180 or 60))
     end
 
     for _,i in pairs({'comboGroup', 'timeBar', 'timeTxt', 'healthBar', 'scoreTxt', 'iconP1', 'iconP2'}) do
@@ -148,7 +149,7 @@ function onCreatePost()
     setTextFont('flowerBrand', 'flower boy.ttf')
     setTextSize('flowerBrand', 32)
     setTextColor('flowerBrand', 'DF968D')
-    runHaxeCode("game.modchartTexts['flowerBrand'].borderStyle = Type.resolveEnum('flixel.text.FlxText.FlxTextBorderStyle').SHADOW;")
+    --runHaxeCode("game.modchartTexts['flowerBrand'].borderStyle = Type.resolveEnum('flixel.text.FlxText.FlxTextBorderStyle').SHADOW;")
     setTextString('flowerBrand', 'ALL SONGS WRITTEN AND\nPRODUCED BY TYLER OKONMA')
     screenCenter('flowerBrand', 'X')
     setProperty('flowerBrand.y', screenHeight)
@@ -167,9 +168,7 @@ function onUpdatePost(elapsed)
     for i = 0, 3 do
         setProperty('opponentStrums.members['..i..'].alpha', 0)
     end
-end
 
-function onSpawnNote()
     if otherChars then
         for i = 0, 7 do
             if getPropertyFromGroup('notes', i, 'mustPress') then

@@ -51,11 +51,6 @@ local titleAssets = {} -- not sure if i'm doing title state, but i'll let it her
 local mainMenuAssets = {}
 local freeplayAssets = {}
 
-initSaveData('mainMenu')
-setDataFromSave('mainMenu', 'wasStoryMode', true)
-setDataFromSave('mainMenu', 'wasFreeplay', false)
-flushSaveData('mainMenu')
-
 local wasStoryMode = getDataFromSave('mainMenu', 'wasStoryMode')
 
 luaDebugMode = true
@@ -113,6 +108,7 @@ function onCreate()
     setTextFont('newsTxt1', 'VCR OSD Mono')
     setTextColor('newsTxt1', 'ffffff')
     setObjectCamera('newsTxt1', 'other')
+    setObjectOrder('newsTxt1', getObjectOrder('bar')+1)
     addLuaText('newsTxt1')
     startTween('newsTween', 'newsTxt1', {x = -734}, 4.25, {type = 'looping'})
     table.insert(mainMenuAssets, 'newsTxt1')
@@ -123,6 +119,7 @@ function onCreate()
     setTextColor('newsTxt2', 'ffffff')
     setProperty('newsTxt2.x', getProperty('newsTxt1.x'))
     setObjectCamera('newsTxt2', 'other')
+    setObjectOrder('newsTxt2', getObjectOrder('newsTxt1'))
     addLuaText('newsTxt2')
     startTween('newsnewsTween', 'newsTxt2', {x = -734}, 4.25, {startDelay = 2, type = 'looping'})
     table.insert(mainMenuAssets, 'newsTxt2')
@@ -162,6 +159,7 @@ function onCreate()
 
     for _, i in pairs(mainMenuAssets) do
 	    if getDataFromSave('mainMenu', 'wasStoryMode') then
+            isMMenu = true
             setProperty(i..'.visible', true)
             setProperty('norbert.visible', false)
 
@@ -236,6 +234,7 @@ function onCreate()
     addLuaText('scoreText')
 
     if getDataFromSave('mainMenu', 'wasFreeplay') then
+        isFreeplay = true
         setPropertyFromClass('flixel.FlxG', 'mouse.visible', false)
         for _, i in pairs(freeplayAssets) do
             setProperty(i..'.visible', true) end
@@ -409,6 +408,7 @@ function onTimerCompleted(tag)
         
         isMMenu = true
         canClick = true
+        norbertcanIdle = true
 
         setPropertyFromClass('flixel.FlxG', 'mouse.visible', true)
         

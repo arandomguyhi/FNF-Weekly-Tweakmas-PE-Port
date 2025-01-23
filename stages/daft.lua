@@ -152,9 +152,9 @@ function onBeatHit()
 
             setProperty('playerStrums.members['..i..'].x', getVar('x'..i) + (curBeat % 2 == 0 and -75 or 75))
             setProperty('playerStrums.members['..i..'].y', getVar('y'..i) + 30*cu)
-            setProperty('playerStrums.members['..i..'].scale.x', getVar('sX'..i) + (curBeat % 4 == 0 and 0.5 or 0.2)*cu)
+            setProperty('playerStrums.members['..i..'].scale.x', getVar('sX'..i) + (curBeat % 4 == 0 and 0.5 or 0.2))
             setProperty('playerStrums.members['..i..'].scale.y', getVar('sY'..i) + (curBeat % 2 == 0 and -0.5 or 0.5))
-            startTween('scale'..i, 'playerStrums.members['..i..']', {x = getVar('x'..i), y = getVar('y'..i), ['scale.x'] = getVar('sX'..i), ['scale.y'] = getVar('sY'..i)}, (stepCrochet/1000)*2, {ease = 'cubeOut'})
+            startTween('scale'..i, 'playerStrums.members['..i..']', {x = getVar('x'..i), y = getVar('y'..i), ['scale.x'] = getVar('sX'..i), ['scale.y'] = getVar('sY'..i)}, (stepCrochet/1000)*2.5, {ease = 'cubeOut'})
         end
     end
 end
@@ -162,7 +162,8 @@ end
 function onCreatePost()
     setPropertyFromClass('flixel.FlxG', 'camera.height', 720-125)
     setPropertyFromClass('flixel.FlxG', 'camera.y', getPropertyFromClass('flixel.FlxG', 'camera.y')+125/2)
-    setProperty('camHUD.height', 657)
+    setProperty('camHUD.height', 720-125)
+    setProperty('camHUD.y', getProperty('camHUD.y') + 125/2)
 
     setProperty('camHUD.zoom', 0.61)
 
@@ -194,7 +195,7 @@ function onCreatePost()
 
     for i = 0,3 do
         setProperty('playerStrums.members['..i..'].x', 435 + (112 * i))
-        setProperty('playerStrums.members['..i..'].y', _G['defaultPlayerStrumY'..i] - 90)
+        setProperty('playerStrums.members['..i..'].y', _G['defaultPlayerStrumY'..i] + (not downscroll and -180 or 60))
 
         runHaxeCode([[
             for (strum in opponentStrums) {
@@ -215,13 +216,13 @@ function onCreatePost()
     setObjectOrder('noteGroup', getObjectOrder('flash1'))
     setObjectOrder('uiGroup', getObjectOrder('noteGroup'))
 
-    setProperty('timeBar.y', getProperty('timeBar.y')-90)
-    setProperty('timeTxt.y', getProperty('timeTxt.y')-90)
+    setProperty('timeBar.y', getProperty('timeBar.y') + (not downscroll and -180 or 60))
+    setProperty('timeTxt.y', getProperty('timeTxt.y') + (not downscroll and -180 or 60))
 
-    setProperty('healthBar.y', getProperty('healthBar.y') + 130)
-    setProperty('scoreTxt.y', getProperty('scoreTxt.y') + 130)
-    setProperty('iconP1.iconOffsets[1]', -130)
-    setProperty('iconP2.iconOffsets[1]', -130)
+    setProperty('healthBar.y', getProperty('healthBar.y') + (not downscroll and 40 or -190))
+    setProperty('scoreTxt.y', getProperty('scoreTxt.y') + (not downscroll and 40 or -190))
+    setProperty('iconP1.iconOffsets[1]', (not downscroll and -40 or 190))
+    setProperty('iconP2.iconOffsets[1]', (not downscroll and -40 or 190))
 
     loadGraphic('healthBar.bg', path..'Bar', false)
     scaleObject('healthBar.bg', 1.0325, 0.85)
@@ -275,7 +276,7 @@ function onSectionHit()
         altTime = not fuck
 
         callMethod('iconP2.changeIcon', {fuck and 'bot1' or 'bot2'})
-        setProperty('iconP2.iconOffsets[1]', -130)
+        setProperty('iconP2.iconOffsets[1]', (not downscroll and -40 or 190))
     end
 end
 
