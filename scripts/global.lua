@@ -1,5 +1,7 @@
 luaDebugMode = true
 
+local wasPaused = false
+
 initSaveData('saveScore')
 setDataFromSave('saveScore', 'curWeek', getDataFromSave('saveScore', 'curWeek'))
 local curWeek = getDataFromSave('saveScore', 'curWeek')
@@ -102,4 +104,10 @@ function onEndSong()
 		end
     end
 	return Function_Continue
+end
+
+function onPause() wasPaused = true end
+function onDestroy()
+	setDataFromSave('mainMenu', 'wasStoryMode', wasPaused)
+	setDataFromSave('mainMenu', 'wasFreeplay', not wasPaused)
 end

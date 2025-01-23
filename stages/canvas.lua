@@ -84,6 +84,7 @@ end
 
 function onSongStart()
     doTweenAlpha('unblack', 'blackScreen', 0, 5, 'smoothStepInOut')
+    cameraSetTarget('boyfriend')
 end
 
 function onEvent(name, v1, v2)
