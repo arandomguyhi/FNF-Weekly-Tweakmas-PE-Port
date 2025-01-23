@@ -9,6 +9,9 @@ var bg:FlxSprite;
 var padding:Float = 10;
 var elements = [];
 
+if (!game.callOnLuas('checkFileExists', ['data/' + Paths.formatToSongPath(game.songName.toLowerCase()) + '/metadata.json']))
+    return;
+
 function onCreate() {
     var path = Paths.getPath('data/' + Paths.formatToSongPath(game.songName.toLowerCase()) + '/metadata.json', 'TEXT', null, true);
     var metadata = TJSON.parse(File.getContent(path));

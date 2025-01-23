@@ -23,6 +23,6 @@
 	"difficulties": "Normal",
 
 	"hideStoryMode": true,
-	"hideFreeplay": false,
+	"hideFreeplay": true,
 	"weeklogo": "TheTweakBeforeChristmas"
 }

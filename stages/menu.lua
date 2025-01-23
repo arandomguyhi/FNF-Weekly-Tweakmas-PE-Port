@@ -1,5 +1,4 @@
 -- HEY, WHAT U LOOKIN FOR?????????????????????
--- this still in work, come back in tweak 3!!
 
 local assetPath = '../TweakAssets/menus/mainmenu/'
 
@@ -54,6 +53,11 @@ local freeplayAssets = {}
 local wasStoryMode = getDataFromSave('mainMenu', 'wasStoryMode')
 
 luaDebugMode = true
+
+function onPause()
+    return Function_Stop
+end
+
 function onCreate()
     setProperty('skipCountdown', true)
     setPropertyFromClass('flixel.FlxG', 'mouse.visible', true)
@@ -189,7 +193,7 @@ function onCreate()
     end
 
     for i = 1, #grpSongs do
-	    createInstance('songText'..i, 'objects.Alphabet', {75, (10*i)+175, grpSongs[i], true, false})
+	    createInstance('songText'..i, 'objects.Alphabet', {70, (10*i)+175, grpSongs[i], true, false})
 	    setProperty('songText'..i..'.isMenuItem', true)
 	    setProperty('songText'..i..'.changeX', false)
 	    setProperty('songText'..i..'.targetY', i)
@@ -199,6 +203,7 @@ function onCreate()
 	    if getProperty('songText'..i..'.width') > 980 then
 	        local textScale = 980 / getProperty('songText'..i..'.width')
 	        setProperty('songText'..i..'.scale.x', textScale)
+            setProperty('songText'..i..'.x', 35)
 	    end
 
 	    createInstance('icon'..i, 'objects.HealthIcon', {iconArray[i]})
@@ -246,6 +251,36 @@ function onCreate()
             setProperty(i..'.visible', false) end
     end
 
+    if buildTarget ~= 'windows' then
+        makeAnimatedLuaSprite('aButton', 'androidPad', 1180, 610)
+	    addAnimationByPrefix('aButton', 'idle', 'a1', 24, false)
+	    addAnimationByPrefix('aButton', 'press', 'a2', 24, false)
+	    playAnim('aButton', 'idle')
+	    --setProperty('aButton.color', getColorFromHex('FFBFD4'))
+	    scaleObject('aButton', 0.85, 0.85)
+        setObjectCamera('aButton', 'other')
+	    addLuaSprite('aButton')
+
+        makeAnimatedLuaSprite('bButton', 'androidPad', 0, 610)
+	    addAnimationByPrefix('bButton', 'idle', 'b1', 24, false)
+	    addAnimationByPrefix('bButton', 'press', 'b2', 24, false)
+	    playAnim('bButton', 'idle')
+	    --setProperty('bButton.color', getColorFromHex('FFBFD4'))
+	    scaleObject('bButton', 0.85, 0.85)
+        setObjectCamera('bButton', 'other')
+	    addLuaSprite('bButton')
+
+        if getDataFromSave('mainMenu', 'wasStoryMode') then
+            setProperty('bButton.visible', true)
+            setProperty('bButton.x', 10)
+            setProperty('aButton.visible', false)
+        else
+            setProperty('bButton.visible', true)
+            setProperty('aButton.visible', true)
+            setProperty('bButton.x', getProperty('aButton.x') - getProperty('bButton.width') + 20)
+        end
+    end
+
     makeLuaSprite('transitionSpr')
     makeGraphic('transitionSpr', screenWidth, screenHeight, '000000')
     setObjectCamera('transitionSpr', 'other')
@@ -271,6 +306,14 @@ end
 local holdTime = 0
 
 function onUpdate()
+    if luaSpriteExists('aButton') and mouseOverlaps('aButton', 'camOther') then
+        playAnim('aButton', 'press', true)
+        runTimer('backToIdle', 0.1)
+    elseif luaSpriteExists('aButton') and mouseOverlaps('aButton', 'camOther') then
+        playAnim('bButton', 'press', true)
+        runTimer('backToIdle', 0.1)
+    end
+
     if isMMenu then
         if getProperty('norbert.animation.curAnim.name') == 'intro' and getProperty('norbert.animation.curAnim.finished') then
 	        norbertcanIdle = true
@@ -284,6 +327,10 @@ function onUpdate()
 	            playAnim(i, 'idle')
 	        end
         end
+
+        if getProperty('controls.BACK') or (luaSpriteExists('bButton') and mouseOverlaps('bButton', 'camOther')) then
+            exitSong()
+        end
     end
 
     if isFreeplay then
@@ -295,9 +342,9 @@ function onUpdate()
             holdTime = 0
         end
 
-        if keyboardJustPressed('SPACE') then
+        if getProperty('controls.ACCEPT') or (luaSpriteExists('aButton') and mouseOverlaps('aButton', 'camOther')) then
             loadSong(grpSongs[curSelected+1])
-        elseif getProperty('controls.BACK') then
+        elseif getProperty('controls.BACK') or (luaSpriteExists('bButton') and mouseOverlaps('bButton', 'camOther')) then
             playSound('cancelMenu')
 
             startTween('transIn', 'transitionSpr', {alpha = 1}, 0.25, {})
@@ -453,6 +500,11 @@ function onTimerCompleted(tag)
             setProperty(i..'.visible', false) end
         curSelected = 0
         changeSelection()
+    end
+
+    if tag == 'backToIdle' then
+        playAnim('aButton', 'idle', true)
+        playAnim('bButton', 'press', true)
     end
 end
 

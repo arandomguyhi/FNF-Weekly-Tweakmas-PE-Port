@@ -21,7 +21,7 @@
 	"startUnlocked": true,
 	"difficulties": "Normal",
 
-	"hideStoryMode": false,
-	"hideFreeplay": false,
+	"hideStoryMode": true,
+	"hideFreeplay": true,
 	"weeklogo": "DiverseDiscography"
 }
