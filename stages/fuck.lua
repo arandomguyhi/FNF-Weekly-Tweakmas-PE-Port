@@ -20,13 +20,14 @@ function onCreatePost()
 		if shadersEnabled then
 			initLuaShader('3D')
 
-			runHaxeCode([[
-	    		var sh = game.createRuntimeShader('3D');
-				for (floats in ['xrot', 'yrot', 'zrot', 'xpos', 'ypos', 'zpos'])
-					sh.setFloat(floats, 0)
+			makeLuaSprite('threedeez')
+			setSpriteShader('threedeez', '3D')
+			for _,floats in pairs({'xrot', 'yrot', 'zrot', 'xpos', 'ypos', 'zpos'}) do
+				setShaderFloat('threedeez', floats, 0) end
 
+			runHaxeCode([[
+	    		var sh = game.getLuaObject('threedeez').shader;
 	    		camGame.setFilters([new ShaderFilter(sh)]);
-	    		setVar('sh', sh);
 			]])
 		end
 
@@ -65,17 +66,15 @@ function onStepHit()
 
     if curStep == 224 then
 	setProperty('camGame.visible', true)
-	runHaxeCode("getVar('sh').setFloat('zpos', 1);")
+	setShaderFloat('threedeez', 'zpos', 1)
     elseif curStep == 228 then
-	runHaxeCode("getVar('sh').setFloat('yrot', -1);")
+	setShaderFloat('threedeez', 'yrot', -1)
     elseif curStep == 230 then
-	runHaxeCode("getVar('sh').setFloat('yrot', 1);")
+	setShaderFloat('threedeez', 'yrot', 1)
     elseif curStep == 232 then
 	setProperty('camHUD.visible', true)
-	runHaxeCode([[
-	    getVar('sh').setFloat('zpos', 0);
-	    getVar('sh').setFloat('yrot', 0);
-	]])
+	setShaderFloat('threedeez', 'zpos', 0)
+	setShaderFloat('threedeez', 'yrot', 0)
 	cameraFlash('camHUD', 'FFFFFF', 1)
     end
 

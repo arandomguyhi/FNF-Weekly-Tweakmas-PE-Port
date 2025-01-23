@@ -131,16 +131,18 @@ function onCreatePost()
     setProperty('flowerOverlay.y', getProperty('flowerOverlay.y') + 12.5)
     setProperty('flowerOverlay.x', 1280)
 
-    makeLuaText('branding', 'ALL SONGS WRITTEN, PRODUCED, AND ARRANGED BY TYLER OKONMA', 0, 0, 999)
-    setTextFont('branding', 'tyler.otf')
-    setTextSize('branding', 32)
-    setTextColor('branding', '000000')
-    setProperty('branding.borderSize', 0)
-    screenCenter('branding', 'X')
-    setProperty('branding.y', 1025 - 600)
-    setObjectOrder('branding', getObjectOrder('noteGroup'))
-    addLuaText('branding')
-    setProperty('branding.visible', false)
+    runHaxeCode([[
+        import flixel.addons.text.FlxTypeText;
+
+        var branding = new FlxTypeText(0, 0, 999, "ALL SONGS WRITTEN, PRODUCED, AND ARRANGED BY TYLER OKONMA");
+        branding.setFormat(Paths.font('tyler.otf'), 32, FlxColor.BLACK, 'center');
+        branding.visible = false;
+        // branding.camera = game.camHUD;
+        branding.screenCenter(0x01);
+        branding.y = 1025 - 600;
+        add(branding);
+        setVar('branding', branding);
+    ]])
 
     makeLuaText('flowerBrand', '')
     setTextFont('flowerBrand', 'flower boy.ttf')
@@ -225,6 +227,7 @@ end
 function igorText()
     setProperty('flowerSky.visible', false)
     setProperty('branding.visible', true)
+    runHaxeCode("getVar('branding').start();")
 end
 
 function igorTransition()
@@ -244,7 +247,7 @@ function igorTransition()
         FlxTween.num(1.75-0.69, 0.62, ]]..stepSize..[[ * 128, {ease: FlxEase.quadInOut, onUpdate: (t)->{
             FlxG.camera.zoom = t.value;
             game.defaultCamZoom = t.value;
-        }});
+        }, onComplete: ()-> { game.callOnLuas('igorText', []); }});
 
         FlxTween.num(getVar('igorShader').saturation, 0, 6, {startDelay: ]]..stepSize..[[ * 128, ease: FlxEase.quadInOut, onUpdate: (fuck)->{ getVar('igorShader').saturation = fuck.value; }});
     ]])
@@ -262,12 +265,9 @@ end
 
 function chromakopiaTransition2()
     charToSing = 'stchroma'
-    setProperty('branding.visible', true)
-
     startTween('hiii', 'stchroma', {y = (getProperty('stchroma.y') - getProperty('stchroma.height')) + 50, alpha = 1}, (stepCrochet / 1000) * 16, {ease = 'quintOut'})
-    startTween('bzl', 'chromakopia', {y = getProperty('chromakopia.y') + 180}, (stepCrochet / 1000) * 16, {ease = 'quintOut'})
-    startTween('BZ', 'branding', {y = 80}, (stepCrochet / 1000) * 16, {ease = 'quintOut'})
-    debugPrint(getProperty('branding.y'))
+    startTween('bzl', 'chromakopia', {y = getProperty('chromakopia.y') + 200}, (stepCrochet / 1000) * 16, {ease = 'quintOut'})
+    startTween('BZ', 'branding', {y = (getProperty('chromakopia.y') + 175) + getProperty('chromakopia.height') + 20}, (stepCrochet / 1000) * 16, {ease = 'quintOut'})
 end
 
 function goodNoteHit(id, noteData)
