@@ -19,7 +19,8 @@ local options = {
 local curWeek = 1
 local loadedWeeks = {
     {'tweakmas1', 'TheTweakBeforeChristmas'},
-    {'tweakmas2', 'SquadUp'}
+    {'tweakmas2', 'SquadUp'},
+    {'tweakmas3', 'DiverseDiscography'}
 }
 
 local weekList = { -- everything in order
@@ -30,6 +31,10 @@ local weekList = { -- everything in order
     ['tweakmas2'] = {
 	    songs = {'Frostburn', 'Park', 'Hot Drop', 'Final Wager', 'Dead End', 'Dying Wish'},
 	    icons = {'king', 'picopark', 'sunspot', 'hr', 'employees', 'tf2'}
+    },
+    ['tweakmas3'] = {
+	    songs = {'Pop Portico', 'L3T M3 BR34K', 'All Night', 'Companion', 'Through You', 'Indomitable2weak'},
+	    icons = {'jack', 'token', 'bot1', 'teto', 'wolf', 'boss'}
     }
 }
 
@@ -61,7 +66,7 @@ function onCreate()
     ---------------- MAIN MENU ----------------
     makeLuaSprite('bg', assetPath..'bg', -7, -4)
     setObjectCamera('bg', 'other')
-    addLuaSprite('bg', true)
+    addLuaSprite('bg')
     table.insert(mainMenuAssets, 'bg')
 
     makeLuaText('tweakTxt', 'TWEAKMAS 0', 0, 1080, 40)
@@ -69,7 +74,7 @@ function onCreate()
     setTextFont('tweakTxt', 'vcr.ttf')
     setProperty('tweakTxt.borderSize', 0)
     setObjectCamera('tweakTxt', 'other')
-    addLuaText('tweakTxt', true)
+    addLuaText('tweakTxt')
     table.insert(mainMenuAssets, 'tweakTxt')
 
     makeLuaText('weekScore', 'SCORE:0', 0, 850, 0)
@@ -78,12 +83,12 @@ function onCreate()
     setProperty('weekScore.borderSize', 0)
     setProperty('weekScore.y', getProperty('tweakTxt.y'))
     setObjectCamera('weekScore', 'other')
-    addLuaText('weekScore', true)
+    addLuaText('weekScore')
     table.insert(mainMenuAssets, 'weekScore')
 
     makeLuaSprite('weeklogo', assetPath..'logos/placeholder', 173, 213)
     setObjectCamera('weeklogo', 'other')
-    addLuaSprite('weeklogo', true)
+    addLuaSprite('weeklogo')
     table.insert(mainMenuAssets, 'weeklogo')
 
     makeAnimatedLuaSprite('norbert', assetPath..'norbert', 840, 260)
@@ -91,7 +96,7 @@ function onCreate()
     addAnimationByPrefix('norbert', 'idle', 'idle', 24, false)
     addAnimationByPrefix('norbert', 'start', 'start', 24, false)
     setObjectCamera('norbert', 'other')
-    addLuaSprite('norbert', true)
+    addLuaSprite('norbert')
     table.insert(mainMenuAssets, 'norbert')
 
     runTimer('norbertIntro', 0.5)
@@ -100,7 +105,7 @@ function onCreate()
     screenCenter('bar', 'X')
     setProperty('bar.y', 553.45)
     setObjectCamera('bar', 'other')
-    addLuaSprite('bar', true)
+    addLuaSprite('bar')
     table.insert(mainMenuAssets, 'bar')
 
     makeLuaText('newsTxt1', 'BREAKING NEWS!!! BREAKING NEWS!!! ', 0, 1060, 562)
@@ -108,7 +113,7 @@ function onCreate()
     setTextFont('newsTxt1', 'VCR OSD Mono')
     setTextColor('newsTxt1', 'ffffff')
     setObjectCamera('newsTxt1', 'other')
-    addLuaText('newsTxt1', true)
+    addLuaText('newsTxt1')
     startTween('newsTween', 'newsTxt1', {x = -734}, 4.25, {type = 'looping'})
     table.insert(mainMenuAssets, 'newsTxt1')
 
@@ -118,19 +123,19 @@ function onCreate()
     setTextColor('newsTxt2', 'ffffff')
     setProperty('newsTxt2.x', getProperty('newsTxt1.x'))
     setObjectCamera('newsTxt2', 'other')
-    addLuaText('newsTxt2', true)
+    addLuaText('newsTxt2')
     startTween('newsnewsTween', 'newsTxt2', {x = -734}, 4.25, {startDelay = 2, type = 'looping'})
     table.insert(mainMenuAssets, 'newsTxt2')
 
     makeLuaSprite('border', assetPath..'border', -19, -23)
     setObjectCamera('border', 'other')
-    addLuaSprite('border', true)
+    addLuaSprite('border')
     table.insert(mainMenuAssets, 'border')
 
     makeAnimatedLuaSprite('fwlogo', assetPath..'weeklylogo', 17.4, 498)
     addAnimationByPrefix('fwlogo', 'idle', 'logobop0', 24, false)
     setObjectCamera('fwlogo', 'other')
-    addLuaSprite('fwlogo', true)
+    addLuaSprite('fwlogo')
     table.insert(mainMenuAssets, 'fwlogo')
 
     for i = 1, #options do
@@ -141,7 +146,7 @@ function onCreate()
 	    setProperty('button'..i..'.y', 41)
 	    setProperty('button'..i..'.ID', i)
 	    setObjectCamera('button'..i, 'other')
-	    addLuaSprite('button'..i, true)
+	    addLuaSprite('button'..i)
 
 	    table.insert(optionGrp, 'button'..i)
 	    table.insert(mainMenuAssets, 'button'..i)
@@ -177,7 +182,7 @@ function onCreate()
     addLuaSprite('freeplaybg')
     table.insert(freeplayAssets, 'freeplaybg')
 
-    for i = 1,2 do
+    for i = 1,3 do
         cu = weekList['tweakmas'..i].songs
         bunda = weekList['tweakmas'..i].icons
         for a = 1,#cu do table.insert(grpSongs, cu[a]) end

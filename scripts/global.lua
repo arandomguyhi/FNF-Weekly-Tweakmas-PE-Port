@@ -5,9 +5,9 @@ setDataFromSave('saveScore', 'curWeek', getDataFromSave('saveScore', 'curWeek'))
 local curWeek = getDataFromSave('saveScore', 'curWeek')
 
 -- leave me alone ok, i know this is dumb :sob:
-for i = 1,2 do
-	setDataFromSave('saveScore', 'tweakmas'..i, getDataFromSave('saveScore', 'tweakmas'..i))
-	setDataFromSave('saveScore', 'bestScorie'..i, getDataFromSave('saveScore', 'bestScorie'..i))
+for i = 1,3 do
+	setDataFromSave('saveScore', 'tweakmas'..i, 0+(getDataFromSave('saveScore', 'tweakmas'..i) == nil and 0 or getDataFromSave('saveScore', 'tweakmas'..i)))
+	setDataFromSave('saveScore', 'bestScorie'..i, 0+(getDataFromSave('saveScore', 'bestScorie'..i) == nil and 0 or getDataFromSave('saveScore', 'bestScorie'..i)))
 end
 flushSaveData('saveScore')
 
