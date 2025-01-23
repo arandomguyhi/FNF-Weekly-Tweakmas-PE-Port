@@ -45,15 +45,15 @@ function onStartCountdown()
             makeVideoSprite('defnotarickroll', 'indomitablecutscene', 0, 0, 'other')
             scaleObject('defnotarickroll', 1.1, 1.1)
         else
-            callMethod('rickVideo.startVideo', {videoPath, true})
+            callMethod('rickVideo.startVideo', {videoPath, false})
             runHaxeCode([[
                 // i hope this works
-                getVar('rickVideo').onEndReached.add(() ->
+                getVar('rickVideo').finishCallback = function()
                 {
                     game.camHUD.flash(FlxColor.WHITE, 2);
                     game.camGame.visible = true;
                     game.camHUD.visible = true;
-                });
+                }
             ]])
         end
         runTimer('startCount', 13.5125)
