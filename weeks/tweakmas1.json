@@ -1,12 +1,6 @@
 {
 	"songs": [
-		["Little Love", "charlie", [255, 183, 95]],
-		["Hook To Grind", "futaba", [0, 255, 61]],
-		["Team Effort", "alph", [70, 205, 255]],
-		["Garlic Soul", "grinch", [134, 170, 22]],
-		["The Lie", "simian", [97, 89, 114]],
-		["A Regular Christmas Song", "quillgin", [149, 64, 73]],
-		["Main Menu", "quillgin", [149, 64, 73]]
+		["Main Menu", "norbert", [255, 255, 255]]
 	],
 
 	"weekCharacters": [
@@ -23,6 +17,6 @@
 	"difficulties": "Normal",
 
 	"hideStoryMode": true,
-	"hideFreeplay": true,
+	"hideFreeplay": false,
 	"weeklogo": "TheTweakBeforeChristmas"
 }

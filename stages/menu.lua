@@ -277,7 +277,7 @@ function onCreate()
         else
             setProperty('bButton.visible', true)
             setProperty('aButton.visible', true)
-            setProperty('bButton.x', getProperty('aButton.x') - getProperty('bButton.width') + 20)
+            setProperty('bButton.x', getProperty('aButton.x') - getProperty('bButton.width') - 5)
         end
     end
 
@@ -306,10 +306,12 @@ end
 local holdTime = 0
 
 function onUpdate()
-    if luaSpriteExists('aButton') and mouseOverlaps('aButton', 'camOther') then
+    if luaSpriteExists('aButton') and mouseOverlaps('aButton', 'camOther') and mouseClicked() then
         playAnim('aButton', 'press', true)
         runTimer('backToIdle', 0.1)
-    elseif luaSpriteExists('aButton') and mouseOverlaps('aButton', 'camOther') then
+    end
+    
+    if luaSpriteExists('aButton') and mouseOverlaps('aButton', 'camOther') and mouseClicked() then
         playAnim('bButton', 'press', true)
         runTimer('backToIdle', 0.1)
     end
@@ -328,7 +330,7 @@ function onUpdate()
 	        end
         end
 
-        if getProperty('controls.BACK') or (luaSpriteExists('bButton') and mouseOverlaps('bButton', 'camOther')) then
+        if getProperty('controls.BACK') or (luaSpriteExists('bButton') and mouseOverlaps('bButton', 'camOther') and mouseClicked()) then
             exitSong()
         end
     end
@@ -342,9 +344,9 @@ function onUpdate()
             holdTime = 0
         end
 
-        if getProperty('controls.ACCEPT') or (luaSpriteExists('aButton') and mouseOverlaps('aButton', 'camOther')) then
+        if getProperty('controls.ACCEPT') or (luaSpriteExists('aButton') and mouseOverlaps('aButton', 'camOther') and mouseClicked()) then
             loadSong(grpSongs[curSelected+1])
-        elseif getProperty('controls.BACK') or (luaSpriteExists('bButton') and mouseOverlaps('bButton', 'camOther')) then
+        elseif getProperty('controls.BACK') or (luaSpriteExists('bButton') and mouseOverlaps('bButton', 'camOther') and mouseClicked()) then
             playSound('cancelMenu')
 
             startTween('transIn', 'transitionSpr', {alpha = 1}, 0.25, {})
@@ -444,6 +446,8 @@ function changeSelection(change, playSoundie)
     local bestScore = callMethodFromClass('backend.Highscore', 'getScore', {grpSongs[curSelected+1], 0})
     local bestRating = callMethodFromClass('backend.Highscore', 'getRating', {grpSongs[curSelected+1], 0})
     local ratingSplit = string.sub(math.floor((bestRating*10000)), 1, 2)..'.'..string.sub(math.floor((bestRating*10000)), 2, 3)
+    if bestRating <= 0 then
+        ratingSplit = '0' end
 
     setTextString('scoreText', 'PERSONAL BEST: '..bestScore..' ('.. ratingSplit ..'%)')
     positionHighscore()

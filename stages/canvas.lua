@@ -204,10 +204,6 @@ function onEvent(name, v1, v2)
             triggerEvent('Alt Idle Animation', 'dad', v2)
         end
     end
-
-    if name == 'Set Cam Zoom' then
-	debugPrint('hi?')
-end
 end
 
 function onDestroy()
