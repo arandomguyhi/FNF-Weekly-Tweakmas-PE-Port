@@ -154,7 +154,7 @@ function onBeatHit()
             setProperty('playerStrums.members['..i..'].y', getVar('y'..i) + 30*cu)
             setProperty('playerStrums.members['..i..'].scale.x', getVar('sX'..i) + (curBeat % 4 == 0 and 0.5 or 0.2))
             setProperty('playerStrums.members['..i..'].scale.y', getVar('sY'..i) + (curBeat % 2 == 0 and -0.5 or 0.5))
-            startTween('scale'..i, 'playerStrums.members['..i..']', {x = getVar('x'..i), y = getVar('y'..i), ['scale.x'] = getVar('sX'..i), ['scale.y'] = getVar('sY'..i)}, (stepCrochet/1000)*2.5, {ease = 'cubeOut'})
+            startTween('scale'..i, 'playerStrums.members['..i..']', {x = getVar('x'..i), y = getVar('y'..i), ['scale.x'] = getVar('sX'..i), ['scale.y'] = getVar('sY'..i)}, (stepCrochet/1000)*2, {ease = 'cubeOut'})
         end
     end
 end

@@ -75,6 +75,7 @@ function onEndSong()
 		callMethodFromClass('backend.Highscore', 'saveScore', {songName, score, difficulty, rating})
 		setDataFromSave('mainMenu', 'wasFreeplay', true)
 		loadSong('Main Menu')
+		playMusic('freakyMenu', true)
 
 		return Function_Stop
 	end
@@ -95,6 +96,7 @@ function onEndSong()
 
 	    	setDataFromSave('mainMenu', 'wasStoryMode', true)
 	    	loadSong('Main Menu')
+			playMusic('freakyMenu', true)
 
 	    	return Function_Stop
 		end

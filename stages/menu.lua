@@ -160,6 +160,7 @@ function onCreate()
     for _, i in pairs(mainMenuAssets) do
 	    if getDataFromSave('mainMenu', 'wasStoryMode') then
             isMMenu = true
+            isFreeplay = false
             setProperty(i..'.visible', true)
             setProperty('norbert.visible', false)
 
@@ -235,6 +236,7 @@ function onCreate()
 
     if getDataFromSave('mainMenu', 'wasFreeplay') then
         isFreeplay = true
+        isMMenu = false
         setPropertyFromClass('flixel.FlxG', 'mouse.visible', false)
         for _, i in pairs(freeplayAssets) do
             setProperty(i..'.visible', true) end
@@ -249,6 +251,8 @@ function onCreate()
     setObjectCamera('transitionSpr', 'other')
     setProperty('transitionSpr.alpha', 0.001)
     addLuaSprite('transitionSpr', true)
+
+    playMusic('freakyMenu', true)
 end
 
 function onCreatePost()
@@ -318,6 +322,17 @@ function selectOption(id)
         setPropertyFromClass('flixel.FlxG', 'mouse.visible', false)
         startTween('transIn', 'transitionSpr', {alpha = 1}, 0.25, {})
         runTimer('loadFreeplay', 1)
+    elseif id == 'credits' then
+        runHaxeCode("game.camOther.shake(0.003, 0.25);")
+        canClick = true
+    elseif id == 'options' then
+        runHaxeCode([[
+            import options.OptionsState;
+            import backend.MusicBeatState;
+            game.paused = true;
+            MusicBeatState.switchState(new OptionsState());
+            OptionsState.onPlayState = true;
+        ]])
     elseif id == 'left' then
 	    changeWeek(-1)
 	    canClick = true
