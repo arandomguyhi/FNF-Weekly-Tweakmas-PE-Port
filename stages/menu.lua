@@ -252,7 +252,7 @@ function onCreate()
     end
 
     if buildTarget ~= 'windows' then
-        makeAnimatedLuaSprite('aButton', 'androidPad', 1180, 610)
+        makeAnimatedLuaSprite('aButton', 'androidPad', 1160, 610)
 	    addAnimationByPrefix('aButton', 'idle', 'a1', 24, false)
 	    addAnimationByPrefix('aButton', 'press', 'a2', 24, false)
 	    playAnim('aButton', 'idle')
@@ -310,7 +310,7 @@ function onUpdate()
         playAnim('aButton', 'press', true)
         runTimer('backToIdle', 0.1)
     end
-    
+
     if luaSpriteExists('aButton') and mouseOverlaps('aButton', 'camOther') and mouseClicked() then
         playAnim('bButton', 'press', true)
         runTimer('backToIdle', 0.1)
@@ -486,6 +486,12 @@ function onTimerCompleted(tag)
             setProperty(i..'.visible', false) end
         for _, i in pairs(mainMenuAssets) do
             setProperty(i..'.visible', true) end
+        if luaSpriteExists('aButton') and luaSpriteExists('bButton') then
+            setProperty('bButton.visible', true)
+            setProperty('bButton.x', 10)
+            setProperty('aButton.visible', false)
+        end
+
         curWeek = 1
         changeWeek()
     end
@@ -502,13 +508,19 @@ function onTimerCompleted(tag)
             setProperty(i..'.visible', true) end
         for _, i in pairs(mainMenuAssets) do
             setProperty(i..'.visible', false) end
+        if luaSpriteExists('aButton') and luaSpriteExists('bButton') then
+            setProperty('bButton.visible', true)
+            setProperty('aButton.visible', true)
+            setProperty('bButton.x', getProperty('aButton.x') - getProperty('bButton.width') - 5)
+        end
+
         curSelected = 0
         changeSelection()
     end
 
     if tag == 'backToIdle' then
         playAnim('aButton', 'idle', true)
-        playAnim('bButton', 'press', true)
+        playAnim('bButton', 'idle', true)
     end
 end
 
