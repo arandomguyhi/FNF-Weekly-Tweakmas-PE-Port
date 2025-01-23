@@ -6419,7 +6419,7 @@
 		"stage": "femtanyl",
 		"validScore": true,
 		"needsVoices": true,
-		"arrowSkin": "../TweakAssets/stages/Tweakmas/Third Edition/femtanyl/notitg_NOTE_assets",
+		"arrowSkin": "../TweakAssets/noteskins/notitg_NOTE_assets",
 		"speed": 2.5,
 		"bpm": 174,
 		"lanes": 2

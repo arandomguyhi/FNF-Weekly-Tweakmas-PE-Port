@@ -3444,7 +3444,7 @@
 		"song": "Pop Portico",
 		"stage": "hotline",
 		"needsVoices": true,
-		"arrowSkin": "../TweakAssets/stages/Tweakmas/Third Edition/jack/JACK_NOTE_assets",
+		"arrowSkin": "../TweakAssets/noteskins/JACK_NOTE_assets",
 		"bpm": 165,
 		"speed": 2.8
 	}
